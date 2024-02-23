@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unbeatable Tic Tac Toe - Proof of concept by github.com/g-30</title>
+  <style>
+@import url('https://fonts.googleapis.com/css?family=Delicious+Handrawn');
+
+:root {
+  --grid-gap: .1em;
+  --strike-through-width: .1em;
+  --bg-color: #44674F;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-color);
+  background: radial-gradient(ellipse at center,  #63856a 1%,#3c5a40 100%);
+  box-shadow: inset 0 0 4vw rgba(0, 0, 0, .1);
+}
+body:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /** inlined noise image */
+  background: url('data:image/png;base64,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')
+    0 0 / 4rem repeat;
+  mix-blend-mode: soft-light;
+  opacity: .75;
+  pointer-events: none;
+}
+body > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/** Game wrap, SVG & animation */
+#playground {
+  position: relative;
+  width: 70vh;
+  height: 70vh;
+  max-width: 32rem;
+  max-height: 32rem;
+  transition: opacity 300ms linear;
+  opacity: 0;
+}
+#playground.visible {
+  opacity: 1;
+}
+.line_animation svg line {
+  animation: dash 300ms ease-in;
+  animation-fill-mode: forwards;
+}
+svg line:nth-of-type(2) { animation-delay: 400ms; }
+svg line:nth-of-type(3) { animation-delay: 700ms; }
+svg line:nth-of-type(4) { animation-delay: 1000ms; }
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+svg {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  opacity: .95;
+  transform: rotateZ(0.5deg);
+}
+
+/** The grid and the strikethrough line */
+#xo {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  width: 100%;
+  height: 100%;
+}
+#xo.game_ended {
+  pointer-events: none;
+}
+#xo:after {
+  content: '';
+  position: absolute;
+  display: none;
+  width: 90%;
+  height: var(--strike-through-width);
+  border-radius: calc(var(--strike-through-width) / 2);
+  background: #fff;
+  left: 5%;
+  top: 17%;
+  transform: rotateZ(-1deg);
+  filter: url(#chalk2) drop-shadow(0 0 1px var(--bg-color));
+}
+#xo.game_end_0:after, #xo.game_end_1:after, #xo.game_end_2:after { display: block; }
+#xo.game_end_1:after { top: 48%; }
+#xo.game_end_2:after { top: 82%; }
+#xo.game_end_3:after, #xo.game_end_4:after, #xo.game_end_5:after {
+  display: block;
+  left: 15%;
+  top: 5%;
+  width: var(--strike-through-width);
+  height: 90%;
+}
+#xo.game_end_4:after { left: 48%; }
+#xo.game_end_5:after { left: 82%; }
+#xo.game_end_6:after, #xo.game_end_7:after {
+  display: block;
+  top: 52%;
+  left: -10%;
+  width: 124%;
+  transform: rotateZ(45deg);
+}
+#xo.game_end_7:after { top: 45%; transform: rotateZ(-45deg); }
+
+/** Grid items (x / o letters) */
+#xo p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-family: 'Delicious Handrawn', 'Comic Sans MS', 'Comic Sans', cursive;
+  font-size: .9em;
+  color: rgba(255, 255, 255, .92);
+  filter: url(#chalk2);
+  transform: rotateZ(3deg) scaleY(0.8);
+  cursor: pointer;
+}
+#xo p:nth-child(2n) {
+  transform: rotateZ(-175deg) scaleY(0.8);
+}
+#xo p:nth-child(3n) {
+  transform: scaleX(-1) scaleY(0.82);
+}
+#xo p.empty:before {
+  content: 'X';
+  opacity: 0;
+}
+#xo p.empty:hover:before {
+  content: 'X';
+  opacity: .3;
+}
+#xo p.userMarked:before {
+  content: 'X';
+}
+#xo p.computerMarked:before {
+  content: 'O';
+}
+
+/** refresh button and its states */
+.button_wrap {
+  position: relative;
+  display: block;
+  height: 106px;
+}
+button, button:before, button:after {
+  display: block;
+  box-sizing: border-box;
+  border-radius: 35px;
+}
+button {
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+  margin: 50px auto;
+  background-color: transparent;
+  border: rgba(0,0,0,0.3) 1px solid;
+  border-top-color: rgba(0,0,0,0.1);
+  border-left-color: rgba(0,0,0,0.2);
+  border-right-color: rgba(0,0,0,0.2);
+  border-bottom-color: rgba(0,0,0,0.3);
+  box-shadow: inset rgba(255,255,255,0.3) -5px -30px 10px,
+              inset rgba(255,255,255,0.3) 0px 30px 10px,
+              inset rgba(255,255,255,1) 0px 2px 1px,
+              rgba(0,0,0,0.4) 0px 10px 15px;
+  transition: box-shadow 0s ease-in-out;
+  text-align: center;
+  cursor: pointer;
+  background-image: radial-gradient(  50%   0%,  8% 50%, hsla(0,0%,100%,.2) 0%, hsla(0,0%,100%,0) 100%),
+                    radial-gradient(  50% 100%, 12% 50%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 100%),
+                    radial-gradient(   0%  50%, 50%  7%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 100%),
+                    radial-gradient( 100%  50%, 50%  5%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 100%),
+                    
+                    repeating-radial-gradient(  50% 50%, 100% 100%, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   3%, hsla(0,0%,  0%,.1) 3.5%),
+                    repeating-radial-gradient(  50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%,.1) 7.5%),
+                    repeating-radial-gradient(  50% 50%, 100% 100%, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,0) 2.2%);
+}
+button:disabled {
+  pointer-events: none;
+}
+button:before, button:after {
+  content: "";
+  position: absolute;
+}
+button:before {
+  z-index: -50;
+  width: 60px;
+  height: 64px;
+  margin-top: -15px;
+  margin-left: -11px;
+  background: #666666;
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,#666666), color-stop(50%,#bbbbbb), color-stop(100%,#666666));
+  background: linear-gradient(left, #666666 0%,#bbbbbb 50%,#666666 100%);
+  box-shadow: #000 0px 0px 2px;
+  transition: transform 300ms ease-out;
+}
+button:after {
+  z-index: -100;
+  width: 70px;
+  height: 70px;
+  margin-top: -64px;
+  margin-left: -16px;
+  background: rgba(0,0,0,0.1);
+  box-shadow: inset rgba(255,255,255,0.1) 0px -5px 5px,
+              rgba(0,0,0,0.1) 0px 3px 3px,
+              rgba(255,255,255,0.05) 0px -3px 3px;
+}
+button:disabled, button:active {
+  margin-top: 46px;
+  color: #fff;
+  box-shadow: inset rgba(255,255,255,0.4) 0px -30px 15px,
+              inset rgba(255,255,255,0.2) -25px 25px 10px,
+              inset rgba(255,255,255,1) 0px 2px 1px,
+              rgba(0,0,0,0.4) 0px 2px 3px;
+}
+button:disabled:before, button:active:before {
+  height: 60px;
+  margin-top: -11px;
+}
+button:disabled:after, button:active:after {
+  margin-top: -60px;
+}
+button:disabled {
+  box-shadow: inset rgba(255,255,255,0.4) 0px -30px 15px,
+              inset rgba(255,255,255,0.2) -25px 25px 10px,
+              inset rgba(255,255,255,1) 0px 2px 1px;
+}
+button:disabled:before {
+  background: rgba(0, 0, 0, .1);
+}
+button i {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"><path class="st0" d="M404 108c-28-27-63-47-103-56l3-52-102 54-27 14-5 3 8 4 38 21 81 43 2-42a165 165 0 0 1 109 225l40 17a208 208 0 0 0-44-231zM296 416l-81-43-2 42A164 164 0 0 1 91 256c0-23 5-46 13-66l-40-17a209 209 0 0 0 147 287l-3 52 102-54 27-14 5-3-8-4-38-21z" fill="black"/></svg>')
+    no-repeat center center / 32px;
+  transition: transform 300ms ease-out;
+  filter: drop-shadow(rgba(0,0,0,0.2) 0px -2px 1px) drop-shadow(rgb(255,255,255) 0px 1px 2px);
+  opacity: .5;
+}
+button:not(:disabled):hover:before {
+  transform: rotateZ(-7.5deg);
+}
+button:not(:disabled):hover i {
+  transform: rotateZ(-7.5deg);
+}
+  </style>
+</head>
+<body>
+  <div>
+    <div id="playground" class="visible line_animation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <defs>
+          <filter id="chalk" x="0" y="0">
+            <feTurbulence result="turbulenceFine" seed="0" type="fractalNoise" baseFrequency="0.06" numOctaves="3"/>
+            <feTurbulence result="turbulenceFat" seed="0" type="fractalNoise" baseFrequency="0.9" numOctaves="4"/>
+            <feDisplacementMap in="SourceGraphic" in2="turbulenceFat" scale="4"/>
+            <feDisplacementMap in2="turbulenceFine" scale="3"/>
+            <feGaussianBlur stdDeviation="0 1" />
+            <feDisplacementMap in2="turbulenceFine" scale="-5"/>
+            <feGaussianBlur stdDeviation="1 0" />
+            <feDisplacementMap in2="turbulenceFat" scale="-8"/>
+          </filter>
+          <filter id="chalk2" x="0" y="0">
+            <feTurbulence result="turbulenceFine" seed="0" type="fractalNoise" baseFrequency="0.2" numOctaves="3"/>
+            <feTurbulence result="turbulenceFat" seed="0" type="fractalNoise" baseFrequency="0.05" numOctaves="4"/>
+            <feDisplacementMap in="SourceGraphic" in2="turbulenceFat" scale="10"/>
+            <feDisplacementMap in2="turbulenceFine" scale="5"/>
+            <feGaussianBlur stdDeviation="0 1" />
+            <feDisplacementMap in2="turbulenceFine" scale="-5"/>
+            <feDisplacementMap in2="turbulenceFat" scale="-10"/>
+          </filter>
+        </defs>
+        <line filter="url(#chalk)" x1="66" y1="7" x2="62" y2="191" stroke="#FFF" stroke-linecap="round" stroke-width="8"/>
+        <line filter="url(#chalk)" x1="137" y1="9" x2="133" y2="194" stroke="#FFF" stroke-linecap="round" stroke-width="8"/>
+        <line filter="url(#chalk)" x1="7" y1="62" x2="192" y2="59" stroke="#FFF" stroke-linecap="round" stroke-width="8"/>
+        <line filter="url(#chalk)" x1="9" y1="130" x2="194" y2="133" stroke="#FFF" stroke-linecap="round" stroke-width="8"/>
+      </svg>
+      <div id="xo"></div>
+    </div>
+    <div class="button_wrap">
+      <button type="button" id="restartButton" disabled><i></i></button>
+    </div>
+  </div>
+  <script>
+// lines animation
+const refreshDelay = 500;
+for (const elem of document.getElementsByTagName("line")) {
+  elem.setAttribute('style', `stroke-dasharray:${elem.getTotalLength()};stroke-dashoffset:${elem.getTotalLength()};`);
+}
+
+// actual logic
+(() => {
+  const playgroundElem = document.getElementById('playground');
+  const xoElem = document.getElementById('xo');
+  const restartButton = document.getElementById('restartButton');
+
+  let isPlaygroundBlocked = false;
+  let isGameOver = false;
+
+  // Initial setup - fill in the grid with empty elements;
+  // also fill in the state array
+  let playgroundState = [];
+  for (let i = 0; i < 9; i++) {
+    const child = document.createElement('p');
+    child.addEventListener('click', (e) => {
+      e.preventDefault();
+      makeUserMove(i);
+      return false;
+    });
+    xoElem.appendChild(child);
+
+    playgroundState[i] = -1;
+  }
+  // save the initial zero-state for later force restart
+  const emptyState = [ ...playgroundState ];
+
+  // Update the state and initiate computer response or the end
+  function makeUserMove(i) {
+    if (isPlaygroundBlocked || playgroundState[i] !== -1) {
+      // Playground is blocked or the grid item is already filled in - skip
+      return;
+    }
+    playgroundState[i] = 1;
+    isPlaygroundBlocked = true;
+
+    // computer makes a move in response if user hasn't won yet
+    // and it's not a tie
+    const winCombinationIndex = getWinCombinationIndex();
+    if (winCombinationIndex === -1 && playgroundState.some((mover) => mover === -1)) {
+      setTimeout(makeComputerMove, (Math.random() + 0.5) * 100); 
+    } else {
+      forceGameOver(winCombinationIndex);
+    }
+
+    drawState();
+  }
+
+  // restart functionality when it's available
+  restartButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!isGameOver) {
+      return false;
+    }
+    forceRestart();
+    return false;
+  });
+  function forceRestart() {
+    playgroundElem.className = 'line_animation';
+    setTimeout(() => {
+      playgroundElem.className = '';
+      void playgroundElem.offsetWidth; // hacky way to trigger redraw & restart CSS animation
+      playgroundElem.className = 'visible line_animation';
+      isGameOver = false;
+      isPlaygroundBlocked = false;
+      playgroundState = [ ...emptyState ];
+      restartButton.disabled = true;
+      xoElem.className = '';
+      drawState();
+    }, refreshDelay);
+  }
+
+  // end the game and show the strikethrough line
+  function forceGameOver(winCombinationIndex) {
+    isGameOver = true;
+    restartButton.disabled = false;
+    xoElem.className = `game_ended game_end_${winCombinationIndex}`;
+  }
+
+  // all possible win indexes for 3x3 grid
+  const winCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  function getWinCombinationIndex(tempState) {
+    const state = tempState || playgroundState;
+    for (let mover = 0; mover <= 1; mover++) {
+      for (let c = 0; c < winCombinations.length; c++) {
+        if (winCombinations[c].every((boardIndex) => state[boardIndex] === mover)) {
+          return c;
+        }
+      }
+    }
+    return -1;
+  }
+
+  function makeComputerMove() {
+    const moveData = getComputerMoveData([ ...playgroundState ]);
+    if (moveData.index === -1) {
+      forceGameOver(-1);
+      alert('Bad state - computer got no moves to make');
+      return;
+    }
+    playgroundState[moveData.index] = 0;
+
+    drawState();
+    isPlaygroundBlocked = false;
+
+    // check if computer won
+    const winCombinationIndex = getWinCombinationIndex();
+    if (winCombinationIndex >= 0) {
+      forceGameOver(winCombinationIndex);
+    }
+  }
+
+  // the actual minmax recursive algorithm
+  // there's room for optimization
+  function getComputerMoveData(tempPlaygroundState, depth) {
+    const winCombinationIndex = getWinCombinationIndex(tempPlaygroundState);
+    if (winCombinationIndex !== -1) {
+      // we've got a winner in this hypothetical game!
+      const wonMover = tempPlaygroundState[winCombinations[winCombinationIndex][0]];
+      return {
+        index: -1,
+        score: wonMover === 1
+          ? -1 // user hypothetically won (bad)
+          :  1 // computer hypothetically won (good)
+      };
+    } else if (!tempPlaygroundState.some((mover) => mover === -1)) {
+      // a tie
+      return { index: -1, score: 0 };
+    }
+    
+    depth = (depth || 0) + 1;
+    // 1 - user's hypothetical turn; 0 - computer's hypothetical turn.
+    const mover = +!(depth % 2);
+
+    const availableMoves = tempPlaygroundState
+      .map((_, i) => i)
+      .filter((boardIndex) => tempPlaygroundState[boardIndex] === -1);
+    const scores = [];
+    const moves = [];
+
+    for (let i = 0; i < availableMoves.length; i++) {
+	    const move = availableMoves[i];
+      const iterationPlayground = [ ...tempPlaygroundState ];
+      iterationPlayground[move] = mover;
+      const hypotheticalMoveData = getComputerMoveData(iterationPlayground, depth);
+      scores.push(hypotheticalMoveData.score);
+      moves.push(move);
+
+      // rollback the hypothetical move
+      tempPlaygroundState[move] = -1;
+    }
+
+    const func = mover === 1
+      ? Math.min // we're looking for the min score if it's user's turn
+      : Math.max; // and for the max score if it's computer's score
+    const moveScore = func.apply(null, scores);
+    const moveScoreIndex = scores.indexOf(moveScore);
+    return { index: moves[moveScoreIndex], score: moveScore };
+  }
+
+  // grid items states
+  const stateToClassName = { '-1': 'empty', '0': 'computerMarked', '1': 'userMarked' };
+  // UI state init
+  drawState();
+  function drawState() {
+    const elems = document.querySelectorAll('#xo > p');
+    for (let i = 0; i < elems.length; i++) {
+      const elem = elems[i];
+      elem.className = stateToClassName[playgroundState[i]];
+    }
+  }
+
+  // recompute the grid on first launch & window resize
+  window.addEventListener('resize', onWindowResize);
+  onWindowResize();
+  function onWindowResize() {
+    const gridSquareSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) * .7);
+    playgroundElem.style.width  = `${gridSquareSize}px`;
+    playgroundElem.style.height = `${gridSquareSize}px`;
+    // font size for x & o
+    const xoRelativeFontSize = Math.floor(xoElem.offsetWidth / 3 / 16 * 100);
+    playgroundElem.style.fontSize = `${xoRelativeFontSize}%`;
+  }
+})();
+  </script>
+</body>
+</html>
